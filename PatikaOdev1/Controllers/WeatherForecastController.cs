@@ -7,11 +7,11 @@ namespace PatikaOdev1.Controllers
     public class WeatherForecast
     {
         public WeatherForecast() { }
-        public WeatherForecast(DateTime d, int tc, string s)
+        public WeatherForecast(DateTime _date, int _temperatureC, string _summary)
         {
-            Date = d;
-            TemperatureC = tc;
-            Summary = s;
+            Date = _date;
+            TemperatureC = _temperatureC;
+            Summary = _summary;
         }
 
         [Required]
