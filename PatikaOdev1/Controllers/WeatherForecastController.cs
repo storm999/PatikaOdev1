@@ -51,9 +51,16 @@ namespace PatikaOdev1.Controllers
         [HttpGet("GetWeatherForecastOrdered")]
         public IActionResult GetOrdered()
         {
-            if(staticData.forecastList.Count == 0)
+            try
             {
-                return NoContent();
+                if (staticData.forecastList.Count == 0)
+                {
+                    return NoContent();
+                }
+            }
+            catch
+            {
+                return BadRequest("An error occured");
             }
             return Ok(staticData.forecastList.OrderBy(t => t.TemperatureC));
         }
@@ -61,9 +68,16 @@ namespace PatikaOdev1.Controllers
         [HttpGet(Name = "GetWeatherForecast")]
         public IActionResult Get()
         {
-            if (staticData.forecastList.Count == 0)
+            try
             {
-                return NoContent();
+                if (staticData.forecastList.Count == 0)
+                {
+                    return NoContent();
+                }
+            }
+            catch
+            {
+                return BadRequest("An error occured");
             }
             return Ok(staticData.forecastList);
         }
