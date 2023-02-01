@@ -49,54 +49,87 @@ namespace PatikaOdev1.Controllers
         }
 
         [HttpGet("GetWeatherForecastOrdered")]
-        public IEnumerable<WeatherForecast> GetOrdered()
+        public IActionResult GetOrdered()
         {
-            return staticData.forecastList.OrderBy(t => t.TemperatureC);
+            if(staticData.forecastList.Count == 0)
+            {
+                return NoContent();
+            }
+            return Ok(staticData.forecastList.OrderBy(t => t.TemperatureC));
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public IActionResult Get()
         {
-            return staticData.forecastList;
+            if (staticData.forecastList.Count == 0)
+            {
+                return NoContent();
+            }
+            return Ok(staticData.forecastList);
         }
 
         [HttpPost(Name = "PostWeatherForecast")]
-        public IEnumerable<WeatherForecast> Post([FromQuery] WeatherForecast wf)
+        public IActionResult Post([FromQuery] WeatherForecast wf)
         {
-            staticData.forecastList.Add(wf);
-
-            return staticData.forecastList;
+            try
+            {
+                staticData.forecastList.Add(wf);
+                return Ok(staticData.forecastList);
+            }
+            catch
+            {
+                return BadRequest("An error occured");
+            }    
         }
 
         [HttpPut(Name = "PutWeatherForecast")]
-        public IEnumerable<WeatherForecast> Put(int id, WeatherForecast wf)
+        public IActionResult Put(int id, WeatherForecast wf)
         {
-            staticData.forecastList[id] = wf;
-
-            return staticData.forecastList;
+            try
+            {
+                staticData.forecastList[id] = wf;
+                return Ok(staticData.forecastList);
+            }
+            catch
+            {
+                return BadRequest("An error occured");
+            }
         }
 
         [HttpPatch(Name = "PatchWeatherForecast")]
-        public IEnumerable<WeatherForecast> Patch(int id, WeatherForecast wf)
+        public IActionResult Patch(int id, WeatherForecast wf)
         {
-            foreach (PropertyInfo propertyInfo in wf.GetType().GetProperties())
+            try
             {
-                /*var b = wf.GetType().GetProperty(propertyInfo.Name);
-                var a = wf.GetType().GetProperty(propertyInfo.Name).GetValue(wf); debugging purpose*/
-                if (wf.GetType().GetProperty(propertyInfo.Name).GetValue(wf) != null && wf.GetType().GetProperty(propertyInfo.Name).CanWrite)
+                foreach (PropertyInfo propertyInfo in wf.GetType().GetProperties())
                 {
-                    staticData.forecastList[id].GetType().GetProperty(propertyInfo.Name).SetValue(staticData.forecastList[id], wf.GetType().GetProperty(propertyInfo.Name).GetValue(wf));
+                    /*var b = wf.GetType().GetProperty(propertyInfo.Name);
+                    var a = wf.GetType().GetProperty(propertyInfo.Name).GetValue(wf); debugging purpose*/
+                    if (wf.GetType().GetProperty(propertyInfo.Name).GetValue(wf) != null && wf.GetType().GetProperty(propertyInfo.Name).CanWrite)
+                    {
+                        staticData.forecastList[id].GetType().GetProperty(propertyInfo.Name).SetValue(staticData.forecastList[id], wf.GetType().GetProperty(propertyInfo.Name).GetValue(wf));
+                    }
                 }
+                return Ok(staticData.forecastList);
             }
-
-            return staticData.forecastList;
+            catch
+            {
+                return BadRequest("An error occured");
+            }
         }
 
         [HttpDelete(Name = "PutWeatherForecast")]
-        public IEnumerable<WeatherForecast> Delete(int id)
+        public IActionResult Delete(int id)
         {
-            staticData.forecastList.RemoveAt(id);
-            return staticData.forecastList;
+            try
+            {
+                staticData.forecastList.RemoveAt(id);
+                return Ok(staticData.forecastList);
+            }
+            catch
+            {
+                return BadRequest("An error occured");
+            }
         }
     }
 }
